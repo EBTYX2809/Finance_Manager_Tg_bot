@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35919.96 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finance_Manager_Tg_bot", "Finance_Manager_Tg_bot\Finance_Manager_Tg_bot.csproj", "{6E38266A-DC66-4856-8FD8-5A2275AD9835}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6E38266A-DC66-4856-8FD8-5A2275AD9835}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E38266A-DC66-4856-8FD8-5A2275AD9835}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E38266A-DC66-4856-8FD8-5A2275AD9835}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E38266A-DC66-4856-8FD8-5A2275AD9835}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1A7FFAF6-1D05-429B-8015-6DB4F0916152}
+	EndGlobalSection
+EndGlobal
