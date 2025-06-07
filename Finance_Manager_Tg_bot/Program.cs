@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Finance_Manager_Tg_bot.TelegramApi;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Extensions.Logging;
 using Telegram.Bot;
 
 namespace Finance_Manager_Tg_bot;
@@ -7,10 +11,8 @@ public class Program
 {
     private static string apiKey;
 
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
-        Console.WriteLine("Hello, World!");
-
         var config = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json")
@@ -18,13 +20,20 @@ public class Program
 
         apiKey = config["TelegramApiKey"];
 
-        StartBot().Wait();
-    }
+        Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+      
+        ILoggerFactory loggerFactory = new SerilogLoggerFactory(Log.Logger);        
+        var tgBotLogger = loggerFactory.CreateLogger<TelegramBotService>();
 
-    public static async Task StartBot()
-    {        
-        var bot = new TelegramBotClient(apiKey);
-        var me = await bot.GetMe();
-        Console.WriteLine($"Hello, World! I am user {me.Id} and my name is {me.FirstName}.");
+        var updateRouter = new UpdateRouter();
+        var botService = new TelegramBotService(apiKey, updateRouter, tgBotLogger);
+
+        await botService.StartAsync();
+
+        Console.ReadLine();
     }
 }
