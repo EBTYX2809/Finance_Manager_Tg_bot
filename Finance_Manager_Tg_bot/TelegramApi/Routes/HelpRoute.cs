@@ -10,7 +10,7 @@ namespace Finance_Manager_Tg_bot.TelegramApi.Routes;
 
 public class HelpRoute : IRoute
 {
-    public async Task HandleAsync(ITelegramBotClient botClient, Message message, CancellationToken token)
+    public async Task HandleMessageAsync(ITelegramBotClient botClient, Message message, CancellationToken token)
     {
         var helpText = """
         Available commands:
@@ -25,5 +25,10 @@ public class HelpRoute : IRoute
             text: helpText,
             cancellationToken: token
         );
+    }
+
+    public Task HandleErrorAsync(ITelegramBotClient botClient, long chatId, Exception exception, CancellationToken token)
+    {
+        throw new NotImplementedException();
     }
 }

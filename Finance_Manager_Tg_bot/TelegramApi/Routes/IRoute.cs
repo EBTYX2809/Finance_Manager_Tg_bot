@@ -10,5 +10,6 @@ namespace Finance_Manager_Tg_bot.TelegramApi.Routes;
 
 public interface IRoute
 {
-    public Task HandleAsync(ITelegramBotClient botClient, Message message, CancellationToken token);
+    public Task HandleMessageAsync(ITelegramBotClient botClient, Message message, CancellationToken token);
+    public Task HandleErrorAsync(ITelegramBotClient botClient, long chatId, Exception exception, CancellationToken token);
 }

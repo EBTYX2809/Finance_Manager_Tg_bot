@@ -8,19 +8,15 @@ using Telegram.Bot.Types;
 
 namespace Finance_Manager_Tg_bot.TelegramApi.Routes;
 
-public class AuthRoute : IRoute
+public class TransactionsRoute : IRoute
 {
     public async Task HandleMessageAsync(ITelegramBotClient botClient, Message message, CancellationToken token)
     {
         
     }
 
-    public async Task HandleErrorAsync(ITelegramBotClient botClient, long chatId, Exception exception, CancellationToken token)
+    public Task HandleErrorAsync(ITelegramBotClient botClient, long chatId, Exception exception, CancellationToken token)
     {
-        await botClient.SendMessage(
-            chatId: chatId,
-            text: exception.Message,            
-            cancellationToken: token
-        );
+        throw new NotImplementedException();
     }
 }
