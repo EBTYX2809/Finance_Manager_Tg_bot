@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Finance_Manager_Tg_bot.Services
+namespace Finance_Manager_Tg_bot.Services;
+
+public class UsersService
 {
-    internal class AuthService
-    {
-    }
+
 }
