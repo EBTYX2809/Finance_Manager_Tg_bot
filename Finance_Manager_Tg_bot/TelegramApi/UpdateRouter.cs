@@ -18,9 +18,6 @@ public class UpdateRouter
 
     public UpdateRouter()
     {
-        _startRoute = new StartRoute();
-        _helpRoute = new HelpRoute();
-        _authRoute = new AuthRoute();
     }
 
     public async Task RouteAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken = default)
@@ -33,10 +30,10 @@ public class UpdateRouter
             switch (text)
             {
                 case "/start":
-                    await _startRoute.HandleAsync(botClient, message, cancellationToken);
+                    await _startRoute.HandleMessageAsync(botClient, message, cancellationToken);
                     break;
                 case "/help":
-                    await _helpRoute.HandleAsync(botClient, message, cancellationToken);
+                    await _helpRoute.HandleMessageAsync(botClient, message, cancellationToken);
                     break;
 
                 default:
