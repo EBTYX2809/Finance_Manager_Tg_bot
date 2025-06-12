@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Finance_Manager_Tg_bot.Models;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,12 +17,14 @@ public class TelegramBotService
 	private readonly ITelegramBotClient _botClient;
 	private readonly UpdateRouter _updateRouter;
     private readonly ILogger<TelegramBotService> _logger;
+    private readonly UserContext _userContext;
 
-    public TelegramBotService(string apiKey, UpdateRouter updateRouter, ILogger<TelegramBotService> logger)
+    public TelegramBotService(string apiKey, UpdateRouter updateRouter, ILogger<TelegramBotService> logger, UserContext userContext)
     {
         _botClient = new TelegramBotClient(apiKey);
         _updateRouter = updateRouter;
         _logger = logger;
+        _userContext = userContext;
     }
 
     public async Task StartAsync(CancellationToken cancellationToken = default)
@@ -36,6 +39,7 @@ public class TelegramBotService
 
     private async Task HandleUpdateAsync(ITelegramBotClient client, Update update, CancellationToken token)
     {
+        _userContext.TelegramId = update.Message?.From?.Id ?? update.CallbackQuery?.From.Id ?? 0;
         await _updateRouter.RouteAsync(client, update, token);
     }
 
