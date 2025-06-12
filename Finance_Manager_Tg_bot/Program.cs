@@ -49,6 +49,10 @@ public class Program
         var botService = ServiceProvider.GetRequiredService<TelegramBotService>();
         await botService.StartAsync();
 
+        // Seed categories
+        var apiClient = ServiceProvider.GetRequiredService<ApiClient>();
+        CategoriesStorage.AllCategories = await apiClient.GetAllCategoriesAsync();
+
         Console.ReadLine();
     }
 
