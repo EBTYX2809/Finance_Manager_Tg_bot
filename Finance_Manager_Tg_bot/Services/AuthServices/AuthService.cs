@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Finance_Manager_Tg_bot.BackendApi;
+using Finance_Manager_Tg_bot.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,30 +24,36 @@ public class AuthSession
 
 public class AuthService
 {
-    private readonly Dictionary<string, AuthSession> _sessions = new();
+    private readonly ApiClient _client;
+    private readonly Dictionary<long, AuthSession> _sessions = new();
 
-    public AuthSession GetOrCreate(string userId)
+    public AuthService(ApiClient client)
     {
-        if (!_sessions.TryGetValue(userId, out AuthSession session)) 
+        _client = client;
+    }
+
+    public AuthSession GetOrCreate(long telegramId)
+    {
+        if (!_sessions.TryGetValue(telegramId, out AuthSession session)) 
         {
             session = new AuthSession();
-            _sessions[userId] = session;
+            _sessions[telegramId] = session;
         }
         return session;
     }
 
-    public void Clear(string userId)
+    public void Clear(long telegramId)
     {
-        _sessions.Remove(userId);
+        _sessions.Remove(telegramId);
     }
 
-    public async Task RegistrationAsync(string email, string password)
+    public async Task<AuthUserTokensDTO> RegistrationAsync(string email, string password)
     {
-        // API Call
+        return await _client.RegisterAsync(email, password);
     }
 
-    public async Task AuthenticateAsync(string email, string password)
+    public async Task<AuthUserTokensDTO> AuthenticateAsync(string email, string password)
     {
-        // API Call
+        return await _client.AuthenticateAsync(email, password);
     }
 }
