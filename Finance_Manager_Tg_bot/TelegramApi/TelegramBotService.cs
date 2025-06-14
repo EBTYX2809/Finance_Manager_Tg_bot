@@ -1,4 +1,8 @@
-﻿using Finance_Manager_Tg_bot.Models;
+﻿using Finance_Manager_Tg_bot.BackendApi;
+using Finance_Manager_Tg_bot.Models;
+using Finance_Manager_Tg_bot.Services;
+using Finance_Manager_Tg_bot.Services.AuthServices;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -15,16 +19,18 @@ namespace Finance_Manager_Tg_bot.TelegramApi;
 public class TelegramBotService
 {
 	private readonly ITelegramBotClient _botClient;
+    private readonly IConfiguration _configuration;
 	private readonly UpdateRouter _updateRouter;
     private readonly ILogger<TelegramBotService> _logger;
     private readonly UserContext _userContext;
 
-    public TelegramBotService(string apiKey, UpdateRouter updateRouter, ILogger<TelegramBotService> logger, UserContext userContext)
+    public TelegramBotService(UpdateRouter updateRouter, ILogger<TelegramBotService> logger, UserContext userContext, IConfiguration configuration)
     {
-        _botClient = new TelegramBotClient(apiKey);
         _updateRouter = updateRouter;
         _logger = logger;
         _userContext = userContext;
+        _configuration = configuration;
+        _botClient = new TelegramBotClient(_configuration["TelegramApiKey"]);
     }
 
     public async Task StartAsync(CancellationToken cancellationToken = default)
@@ -39,7 +45,7 @@ public class TelegramBotService
 
     private async Task HandleUpdateAsync(ITelegramBotClient client, Update update, CancellationToken token)
     {
-        _userContext.TelegramId = update.Message?.From?.Id ?? update.CallbackQuery?.From.Id ?? 0;
+        _userContext.TelegramId = update.Message?.From?.Id ?? update.CallbackQuery?.From.Id ?? 0;       
         await _updateRouter.RouteAsync(client, update, token);
     }
 
