@@ -20,31 +20,7 @@ public class Program
     {
         var services = new ServiceCollection();
         ConfigureServices(services);
-        ServiceProvider = services.BuildServiceProvider();
-
-        // Config
-        Config = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json")
-            .Build();
-
-        Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .WriteTo.Console()
-                .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
-                .CreateLogger();
-
-        services.AddLogging(loggingBuilder =>
-        {
-            loggingBuilder.ClearProviders();
-            loggingBuilder.AddSerilog();
-        });
-
-        services.AddMemoryCache();
-
-        // Solution without DI:
-        /*ILoggerFactory loggerFactory = new SerilogLoggerFactory(Log.Logger);        
-        var tgBotLogger = loggerFactory.CreateLogger<TelegramBotService>();*/
+        ServiceProvider = services.BuildServiceProvider();        
 
         var botService = ServiceProvider.GetRequiredService<TelegramBotService>();
         await botService.StartAsync();
@@ -58,6 +34,34 @@ public class Program
 
     private static void ConfigureServices(ServiceCollection services)
     {
+        // Config
+        Config = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json")
+            .Build();
+
+        services.AddSingleton<IConfiguration>(Config);
+
+        // Logger
+        Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
+        services.AddLogging(loggingBuilder =>
+        {
+            loggingBuilder.ClearProviders();
+            loggingBuilder.AddSerilog();
+        });
+
+        // Cache
+        services.AddMemoryCache();
+
+        // Solution without DI:
+        /*ILoggerFactory loggerFactory = new SerilogLoggerFactory(Log.Logger);        
+        var tgBotLogger = loggerFactory.CreateLogger<TelegramBotService>();*/
+        
         services.AddSingleton<UserSessionsManager>();
         services.AddSingleton<UserContext>();
 
@@ -70,8 +74,7 @@ public class Program
         services.AddSingleton<UsersService>();
 
         // Routes
-        services.AddSingleton<AuthRoute>();
-        services.AddSingleton<HelpRoute>();
+        services.AddSingleton<AuthRoute>();        
         services.AddSingleton<StartRoute>();
         services.AddSingleton<TransactionsRoute>();
         services.AddSingleton<UsersRoute>();
