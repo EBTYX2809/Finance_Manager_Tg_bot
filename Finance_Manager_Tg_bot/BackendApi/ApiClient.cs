@@ -47,7 +47,7 @@ public class ApiClient
         else
         {
             var errorContent = await response.Content.ReadAsStringAsync();
-            var error = JsonSerializer.Deserialize<ErrorResponse>(errorContent);
+            var error = JsonSerializer.Deserialize<ErrorResponse>(errorContent, _jsonOptions);
             _logger.LogError(error.Message, "Error in BackendApi.");
             throw new ApiException(error);
         }
@@ -62,7 +62,7 @@ public class ApiClient
         else
         {
             var errorContent = await response.Content.ReadAsStringAsync();
-            var error = JsonSerializer.Deserialize<ErrorResponse>(errorContent);
+            var error = JsonSerializer.Deserialize<ErrorResponse>(errorContent, _jsonOptions);
             _logger.LogError(error.Message, "Error in BackendApi.");
             throw new ApiException(error);
         }
@@ -105,6 +105,15 @@ public class ApiClient
         var content = GetStringContent(refreshToken);
 
         var response = await _httpClient.PostAsync("auth/refresh-token", content);
+
+        return await HandleResponseAsync<AuthUserTokensDTO>(response);
+    }
+
+    public async Task<AuthUserTokensDTO> AuthenticateByTelegramIdAsync(long telegramId)
+    {
+        var content = GetStringContent(telegramId);
+
+        var response = await _httpClient.PostAsync("auth/telegram-id", content);
 
         return await HandleResponseAsync<AuthUserTokensDTO>(response);
     }
