@@ -11,30 +11,24 @@ namespace Finance_Manager_Tg_bot.TelegramApi.Routes;
 
 public class StartRoute : IRoute
 {
+    public bool CanHandle(Update update)
+    {
+        return update.Message?.Text == "/start";
+    }
 
-    public async Task HandleMessageAsync(ITelegramBotClient botClient, Message message, CancellationToken token)
+    public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken token)
     {
         var welcomeText = """
         👋 Hi! I'm — Telegram-bot for managing your finances.
         I can create new transactions and show your balance. 
 
-        First, you need to log in — click on registration or authenticate button.
-        Type /help to see all commands.
+        First, you need to log in — click on registration or authenticate button.        
         """;
 
-        var buttons = new[]
-        {
-            new[]
-            {
-                InlineKeyboardButton.WithCallbackData("Registration", "auth_register"),
-                InlineKeyboardButton.WithCallbackData("Authenticate", "auth_login")
-            }
-        };
-
         await botClient.SendMessage(
-            chatId: message.Chat.Id,
+            chatId: update.Message.Chat.Id,
             text: welcomeText,
-            replyMarkup: new InlineKeyboardMarkup(buttons),
+            replyMarkup: new InlineKeyboardMarkup(InlineButtons.AuthButtons),
             cancellationToken: token
         );
     }
