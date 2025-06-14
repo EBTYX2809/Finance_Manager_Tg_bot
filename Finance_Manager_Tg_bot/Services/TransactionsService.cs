@@ -13,18 +13,17 @@ public enum TransactionCreateStage
 {
     None,
     AwaitingName,
-    AwaitingPrice,
-    AwaitingDate,
-    //AwaitingCategoryId
+    AwaitingPrice,    
+    AwaitingCategoryId
 }
 
 public class TransactionCreateSession
 {
+    public bool IsTransactionCreateSessionActive { get; set; } = false;
     public TransactionCreateStage Stage { get; set; } = TransactionCreateStage.None;
     public string? Name { get; set; }
     public decimal Price { get; set; }
-    public DateTime Date { get; set; } = DateTime.Now;
-    //public int CategoryId { get; set; }
+    public DateTime Date { get; set; } = DateTime.UtcNow;
 }
 
 public class TransactionsService
@@ -37,7 +36,7 @@ public class TransactionsService
         _client = client;
     }
 
-    public TransactionCreateSession GetOrCreate(long telegramId)
+    public TransactionCreateSession GetOrCreateSession(long telegramId)
     {
         if (!_sessions.TryGetValue(telegramId, out TransactionCreateSession session))
         {
