@@ -17,6 +17,7 @@ public enum AuthStage
 
 public class AuthSession
 {
+    public bool IsAuthSessionActive = false;
     public AuthStage Stage { get; set; } = AuthStage.None;
     public string? Email { get; set; }
     public bool IsRegisterOrLogin { get; set; } = true;
@@ -32,7 +33,7 @@ public class AuthService
         _client = client;
     }
 
-    public AuthSession GetOrCreate(long telegramId)
+    public AuthSession GetOrCreateSession(long telegramId)
     {
         if (!_sessions.TryGetValue(telegramId, out AuthSession session)) 
         {
@@ -55,5 +56,10 @@ public class AuthService
     public async Task<AuthUserTokensDTO> AuthenticateAsync(string email, string password)
     {
         return await _client.AuthenticateAsync(email, password);
+    }
+
+    public async Task<AuthUserTokensDTO> AuthenticateUserByTelegramIdAsync(long telegramId)
+    {
+        return await _client.AuthenticateByTelegramIdAsync(telegramId);
     }
 }
